@@ -5,18 +5,20 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
+    private int id = 0;
     [SerializeField] Image image;
-    [SerializeField] Sprite frontImage;
+    [SerializeField] Sprite itemImage;
     [SerializeField] Sprite backImage;
 
     [SerializeField] bool isFlipped = false;
+    [SerializeField] bool flipping = false;
     [SerializeField] float flipDuration = 1;
 
 
     //card flip ease in
-    public AnimationCurve scaleDownCurve; 
+    public AnimationCurve scaleDownCurve;
     //card flip ease out
-    public AnimationCurve scaleUpCurve; 
+    public AnimationCurve scaleUpCurve;
 
 
     [ContextMenu("Flip Card")]
@@ -27,6 +29,7 @@ public class Card : MonoBehaviour
 
     IEnumerator AnimateCard()
     {
+        flipping = true;
         float elapsedTime = 0f;
 
         //scale x to 0
@@ -34,11 +37,14 @@ public class Card : MonoBehaviour
         {
             float t = elapsedTime / flipDuration;
             float curveValue = scaleDownCurve.Evaluate(t);
-            transform.localScale = new Vector3(Mathf.Lerp(1, 0, curveValue),transform.localScale.y,transform.localScale.z);
+            transform.localScale = new Vector3(Mathf.Lerp(1, 0, curveValue), transform.localScale.y, transform.localScale.z);
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+        //change sprite, flip logic
+        FlipImage();
 
         elapsedTime = 0f;
 
@@ -52,17 +58,41 @@ public class Card : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        flipping = false;
+        //done flipping
     }
 
     public void HideCard()
     {
 
     }
-
+    public void FlipImage()
+    {
+        if (!isFlipped)
+        {
+            ChangeImage(itemImage);
+        }
+        else
+        {
+            ChangeImage(backImage);
+        }
+        isFlipped = !isFlipped;
+    }
     public void ChangeImage(Sprite sprite)
     {
-        image.sprite=sprite;
+        image.sprite = sprite;
 
     }
-
+    public int GetID()
+    {
+        return id;
+    }
+    public void SetID(int id)
+    {
+        this.id = id;
+    }
+    public void SetItemSprite(Sprite sprite)
+    {
+        itemImage = sprite; 
+    }
 }

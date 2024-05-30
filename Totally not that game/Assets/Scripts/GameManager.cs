@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     //current score
     private int score;
     //number of correct matches
@@ -12,13 +14,16 @@ public class GameManager : MonoBehaviour
     private int turns;
 
 
-    [SerializeField] GameObject cardPrefab;
 
     //current pressed cards references
     private Card firstCard, secondCard;
     //layout size
     [SerializeField] private Vector2Int gridSize;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void CreateCardGrid()
     {
