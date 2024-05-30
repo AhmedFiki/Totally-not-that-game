@@ -12,12 +12,12 @@ public class GameManager : MonoBehaviour
     private int turns;
 
 
-    public GameObject cardPrefab;
+    [SerializeField] GameObject cardPrefab;
 
     //current pressed cards references
-    public Card firstCard, secondCard;
+    private Card firstCard, secondCard;
     //layout size
-    public Vector2Int gridSize;
+    [SerializeField] private Vector2Int gridSize;
 
 
     public void CreateCardGrid()
@@ -48,5 +48,9 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void SetGridSize(Vector2Int gridSize)
+    {
+        this.gridSize = gridSize;
+    }
 
 }
