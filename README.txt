@@ -8,9 +8,10 @@ This project was developed as a technical assessment
 
 Windows directory:
 Windows exe build can be found inside the builds folder
-Totally not that game\Builds\Windows\Totally not that game.exe
+Totally not that game\Builds\Windows\CardFlipWindows\Totally not that game.exe
 
-Start the game on windows by simply opening the exe file
+Start the game on windows by simply opening the exe file.
+A compressed file containing the windows executable can also be found in the windows folder "CardFlipWindows.zip"
 
 Android directory:
 Same for the android APK file 
