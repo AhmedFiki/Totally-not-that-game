@@ -24,6 +24,20 @@ public class CardGrid : MonoBehaviour
 
         StartCoroutine(InitFlip());
 
+
+    }
+    void CheckAvailableCards()
+    {
+        int unHiddenCards = 0;
+
+        foreach (var card in cards)
+        {
+            if (!card.GetComponent<Card>().IsHidden())
+            {
+                unHiddenCards++;
+            }
+        }
+        GameManager.Instance.availableCards = unHiddenCards;
     }
     IEnumerator InitFlip()
     {
@@ -64,6 +78,7 @@ public class CardGrid : MonoBehaviour
         {
             AssignGridCards();
         }
+        CheckAvailableCards();
     }
 
     void ShuffleSpriteList()
@@ -112,9 +127,11 @@ public class CardGrid : MonoBehaviour
             cards[i].GetComponent<Card>().SetItemSprite(GetSpriteFromID( GetSpriteID(data.cardsData[i].spriteName)));
             cards[i].GetComponent<Card>().SetID(data.cardsData[i].id);
             cards[i].GetComponent<Card>().SetHidden(data.cardsData[i].hidden);
-        }
+            GameManager.Instance.unshuffledCards.Add(cards[i]);
 
         }
+
+    }
     void ShuffleGridChildren()
     {
         List<Transform> children = new List<Transform>();

@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject winPanel;
 
-    int availableCards = 0;
+    public int availableCards = 0;
 
     public List<GameObject> unshuffledCards = new List<GameObject>();
 
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        availableCards = PlayerPrefs.GetInt("cardcount", 12);
+        //availableCards = PlayerPrefs.GetInt("cardcount", 12);
     }
     public void RegisterClick(Card card)
     {
@@ -176,6 +176,8 @@ public class GameManager : MonoBehaviour
     }
     public void Restart()
     {
+        PlayerPrefs.DeleteKey("SaveData");
+
         SceneManager.LoadScene(1);
 
     }
