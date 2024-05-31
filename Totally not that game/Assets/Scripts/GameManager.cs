@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     private int turns;
     [SerializeField] TextMeshProUGUI turnsText;
 
+    [SerializeField] int combo = 1;
+    [SerializeField] TextMeshProUGUI comboText;
 
 
     //current pressed cards references
@@ -31,6 +33,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] int scorePerMatch = 100;
 
+    //audio references
     public AudioSource audioSource;
     public AudioClip winClip;
     public AudioClip rightClip;
@@ -44,12 +47,14 @@ public class GameManager : MonoBehaviour
     public List<GameObject> unshuffledCards = new List<GameObject>();
 
 
+
     private void Awake()
     {
         Instance = this;
 
         if (PlayerPrefs.HasKey(saveKey))
         {
+            //load game if player pressed continue
             LoadGame();
         }
 
@@ -61,6 +66,7 @@ public class GameManager : MonoBehaviour
     }
     public void RegisterClick(Card card)
     {
+        //called on any card press
         PlayAudioClip(cardClip);
         card.FlipCard();
         if (first)
@@ -81,6 +87,7 @@ public class GameManager : MonoBehaviour
         if (firstCard.GetID() == secondCard.GetID())
         {//add score, remove gameobjects
             AddScore(scorePerMatch);
+            AddCombo();
             AddMatch();
             PlayAudioClip(rightClip);
             StartCoroutine(ReFlipTimer(firstCard, secondCard, true));
@@ -88,7 +95,7 @@ public class GameManager : MonoBehaviour
         else
         {//flip again
             PlayAudioClip(wrongClip);
-
+            ResetCombo();
             StartCoroutine(ReFlipTimer(firstCard, secondCard, false));
         }
 
@@ -97,6 +104,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator ReFlipTimer(Card first, Card second, bool correct)
     {
+        //coroutine to handle the second pressed card
 
         yield return new WaitForSeconds(cardRegisterDuration);
 
@@ -117,9 +125,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddCombo()
+    {
+        combo++;
+        comboText.text = combo.ToString();
+    }
+    public void ResetCombo()
+    {
+        combo = 1; 
+        comboText.text = combo.ToString();
+    }
+
     public void AddScore(int score)
     {
-        this.score += score;
+        this.score += score*combo;
         scoreText.text = this.score.ToString();
     }
     public void AddMatch()
@@ -139,10 +158,6 @@ public class GameManager : MonoBehaviour
         winPanel.SetActive(true);
     }
 
-    public void RestartGame()
-    {
-
-    }
 
     public void PlayAudioClip(AudioClip clip)
     {
@@ -166,6 +181,7 @@ public class GameManager : MonoBehaviour
     }
     public void SaveQuit()
     {
+        //save game data and quit to main menu
         SaveData saveData = new SaveData();
 
 
@@ -181,12 +197,10 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
 
     }
-    public void FillCardData()
-    {
-
-    }
+ 
     public List<CardData> GetCardData()
     {
+        //helper function to create a serializable list of card data for saving
         List<CardData> cardDatas = new List<CardData>();
 
         foreach (var card in unshuffledCards)
@@ -206,6 +220,7 @@ public class GameManager : MonoBehaviour
     }
     public void SaveGame(SaveData data)
     {
+        //save serialized data as json string
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(saveKey, json);
         PlayerPrefs.Save();
@@ -213,6 +228,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
+        //loads game variables and stats
         if (PlayerPrefs.HasKey(saveKey))
         {
             string json = PlayerPrefs.GetString(saveKey);
@@ -238,5 +254,6 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
         matchesText.text = matches.ToString();
         turnsText.text = turns.ToString();
+        
     }
 }

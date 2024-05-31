@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    //rows and columns depending on difficulty
     public int rows = 3
         , columns = 2;
 
@@ -25,7 +26,7 @@ public class MainMenuManager : MonoBehaviour
     }
 
     public void PlayDifficulty(int difficulty)
-    {
+    {//change grid size depending on difficulty
         switch (difficulty)
         {
             case 0:
@@ -63,6 +64,8 @@ public class MainMenuManager : MonoBehaviour
     }
     public void StartGame()
     {
+        //start a new game
+
         PlayerPrefs.SetInt("rows", rows);
         PlayerPrefs.SetInt("cardcount", rows * columns);
 
@@ -79,6 +82,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadGame()
     {
+        //continue saved game
         SceneManager.LoadScene(1);
     }
 

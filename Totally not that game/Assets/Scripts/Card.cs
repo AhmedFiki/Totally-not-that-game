@@ -37,6 +37,7 @@ public class Card : MonoBehaviour
 
     IEnumerator AnimateCard()
     {
+        //handles card flipping animation
         flipping = true;
         float elapsedTime = 0f;
 
@@ -77,6 +78,7 @@ public class Card : MonoBehaviour
     }
     public void FlipImage()
     {
+        //change sprite on card depending on current face
         if (!isFlipped)
         {
             ChangeImage(itemImage);
@@ -90,7 +92,8 @@ public class Card : MonoBehaviour
 
     public void OnClick()
     {
-        if(!flipping)
+        //onclick event (gets called in event trigger)
+        if(!flipping&&!isFlipped)
         GameManager.Instance.RegisterClick(this);
     }
 

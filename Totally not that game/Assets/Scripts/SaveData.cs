@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable]
 public class SaveData
 {
+    //data class that holds all game data for saving and loading
     public int rows;
     public int cardCount;
 

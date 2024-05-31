@@ -17,14 +17,32 @@ public class CardGrid : MonoBehaviour
 
     private void Start()
     {
-
+        //handle grid instantiation
         rows = PlayerPrefs.GetInt("rows", 3);
         AdjustCellSize();
         InstantiateGridCards(PlayerPrefs.GetInt("cardcount", 12));
 
+        StartCoroutine(InitFlip());
+
     }
+    IEnumerator InitFlip()
+    {
+        //handles initial card flip
+        foreach (var card in cards)
+        {
+            card.GetComponent<Card>().FlipCard();
+        }
+        yield return new WaitForSeconds(3f);
+        foreach (var card in cards)
+        {
+            card.GetComponent<Card>().FlipCard();
+        }
+
+    }
+
     private void AdjustCellSize()
     {
+        //calculates grid size from gridlayoutgroup
         RectTransform containerRectTransform = gridLayoutGroup.GetComponent<RectTransform>();
         float cellWidth = (containerRectTransform.rect.height - (gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom) - ((rows - 1) * gridLayoutGroup.spacing.x)) / rows;
 
@@ -33,6 +51,7 @@ public class CardGrid : MonoBehaviour
 
     public void InstantiateGridCards(int amount)
     {
+        //instantiate a number of grid cards
         for (int i = 0; i < amount; i++)
         {
             InstantiateGridCard();
@@ -59,11 +78,6 @@ public class CardGrid : MonoBehaviour
             sprites[j] = temp;
         }
     }
-    [ContextMenu("Test Grid")]
-    public void TestInstantiateGrid()
-    {
-        InstantiateGridCards(10);
-    }
 
     [ContextMenu("Instantiate card")]
     public void InstantiateGridCard()
@@ -74,6 +88,8 @@ public class CardGrid : MonoBehaviour
 
     public void AssignGridCards()
     {
+        //loops over cards to assign unique ids and sprites
+
         ShuffleSpriteList();
         int index = 0;
         for (int i = 0; i < cards.Count; i += 2)
@@ -88,6 +104,7 @@ public class CardGrid : MonoBehaviour
     }
     public void LoadGridCards()
     {
+        //loads previous grid data from save
         string json = PlayerPrefs.GetString("SaveData");
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         for (int i = 0; i < cards.Count; i ++)
@@ -140,6 +157,7 @@ public class CardGrid : MonoBehaviour
 
     public int GetSpriteID(string s)
     {
+        //expression to extract ID from sprite name (allows serializing card data and its sprite)
         Match match = Regex.Match(s, @"^\d+");
         if (match.Success)
         {
@@ -149,6 +167,7 @@ public class CardGrid : MonoBehaviour
     }
     public Sprite GetSpriteFromID(int id)
     {
+
         foreach(Sprite sprite in sprites)
         {
             if (GetSpriteID(sprite.name) == id)
