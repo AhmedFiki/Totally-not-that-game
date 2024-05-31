@@ -12,18 +12,24 @@ public class CardGrid : MonoBehaviour
     [SerializeField] List<GameObject> cards = new List<GameObject>();
     [SerializeField] List<Sprite> sprites = new List<Sprite>();
 
-    
+
 
     private void Start()
     {
+        columns = PlayerPrefs.GetInt("columns", 3);
         AdjustCellSize();
-        TestInstantiateGrid();
+        InstantiateGridCards(PlayerPrefs.GetInt("cardcount", 6));
+
     }
     private void AdjustCellSize()
     {
         RectTransform containerRectTransform = gridLayoutGroup.GetComponent<RectTransform>();
         float cellWidth = (containerRectTransform.rect.width - (gridLayoutGroup.padding.left + gridLayoutGroup.padding.right) - ((columns - 1) * gridLayoutGroup.spacing.x)) / columns;
-        gridLayoutGroup.cellSize = new Vector2(cellWidth, cellWidth);
+        float cellHeight = (containerRectTransform.rect.height - (gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom) - ((columns - 1) * gridLayoutGroup.spacing.y)) / columns;
+        float avg = (cellWidth + cellHeight) /2;
+        Debug
+            .Log(cellWidth+" "+cellHeight+" "+avg);
+        gridLayoutGroup.cellSize = new Vector2(avg, avg);
     }
 
     public void InstantiateGridCards(int amount)
@@ -32,7 +38,7 @@ public class CardGrid : MonoBehaviour
         {
             InstantiateGridCard();
         }
-        AssignGridCards();  
+        AssignGridCards();
 
     }
 
@@ -54,7 +60,7 @@ public class CardGrid : MonoBehaviour
         InstantiateGridCards(10);
     }
 
-        [ContextMenu("Instantiate card")]
+    [ContextMenu("Instantiate card")]
     public void InstantiateGridCard()
     {
         GameObject go = Instantiate(cardPrefab, transform);
@@ -69,9 +75,9 @@ public class CardGrid : MonoBehaviour
         {
             cards[i].GetComponent<Card>().SetItemSprite(sprites[index]);
             cards[i].GetComponent<Card>().SetID(index);
-            
+
             cards[i + 1].GetComponent<Card>().SetItemSprite(sprites[index]);
-            cards[i+1].GetComponent<Card>().SetID(index++);
+            cards[i + 1].GetComponent<Card>().SetID(index++);
         }
         ShuffleGridChildren();
     }

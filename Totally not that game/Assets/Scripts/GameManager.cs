@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
         if (firstCard.GetID() == secondCard.GetID())
         {//add score, remove gameobjects
             AddScore(scorePerMatch);
+            AddMatch();
             StartCoroutine(ReFlipTimer(firstCard, secondCard, true));
         }
         else
@@ -69,7 +70,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(ReFlipTimer(firstCard, secondCard, false));
         }
 
-        AddMatch();
+        AddTurn();
     }
 
     IEnumerator ReFlipTimer(Card first, Card second, bool correct)
@@ -92,14 +93,17 @@ public class GameManager : MonoBehaviour
     public void AddScore(int score)
     {
         this.score += score;
+        scoreText.text = score.ToString();
     }
     public void AddMatch()
     {
         this.matches++;
+        matchesText.text = matches.ToString();
     }
     public void AddTurn()
     {
         this.turns++;
+        turnsText.text = turns.ToString();
     }
 
     public void Win()

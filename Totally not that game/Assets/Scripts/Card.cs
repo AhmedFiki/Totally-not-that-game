@@ -7,6 +7,7 @@ public class Card : MonoBehaviour
 {
     [SerializeField] int id = 0;
     [SerializeField] Image image;
+    [SerializeField] public GameObject visuals;
     [SerializeField] Sprite itemImage;
     [SerializeField] Sprite backImage;
 
@@ -64,8 +65,7 @@ public class Card : MonoBehaviour
 
     public void HideCard()
     {
-        Debug.Log("Card hidden");
-
+        visuals.SetActive(false);
     }
     public void FlipImage()
     {
@@ -82,6 +82,7 @@ public class Card : MonoBehaviour
 
     public void OnClick()
     {
+        if(!flipping)
         GameManager.Instance.RegisterClick(this);
     }
 
