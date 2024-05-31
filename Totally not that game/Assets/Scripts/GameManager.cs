@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public const string saveKey = "SaveData";
 
+    public CardGrid cardGrid;
     //current score
-    private int score;
+    [SerializeField] private int score;
     [SerializeField] TextMeshProUGUI scoreText;
 
     //number of correct matches
@@ -39,9 +41,19 @@ public class GameManager : MonoBehaviour
 
     int availableCards = 0;
 
+    public List<GameObject> unshuffledCards = new List<GameObject>();
+
+
     private void Awake()
     {
         Instance = this;
+
+        if (PlayerPrefs.HasKey(saveKey))
+        {
+            LoadGame();
+        }
+
+
     }
     private void Start()
     {
@@ -108,7 +120,7 @@ public class GameManager : MonoBehaviour
     public void AddScore(int score)
     {
         this.score += score;
-        scoreText.text = score.ToString();
+        scoreText.text = this.score.ToString();
     }
     public void AddMatch()
     {
@@ -154,6 +166,77 @@ public class GameManager : MonoBehaviour
     }
     public void SaveQuit()
     {
+        SaveData saveData = new SaveData();
 
+
+        saveData.rows = PlayerPrefs.GetInt("rows", 3);
+        saveData.cardCount = PlayerPrefs.GetInt("cardcount", 12);
+        saveData.score = this.score;
+        saveData.turns = this.turns;
+        saveData.matches = this.matches;
+
+        saveData.cardsData = GetCardData();
+
+        SaveGame(saveData);
+        SceneManager.LoadScene(0);
+
+    }
+    public void FillCardData()
+    {
+
+    }
+    public List<CardData> GetCardData()
+    {
+        List<CardData> cardDatas = new List<CardData>();
+
+        foreach (var card in unshuffledCards)
+        {
+            CardData cardData = new CardData();
+            Card c = card.GetComponent<Card>();
+
+            cardData.id = c.GetID();
+            cardData.spriteName = c.itemImage.name;
+            cardData.hidden = c.IsHidden();
+
+            cardDatas.Add(cardData);
+        }
+
+        return cardDatas;
+
+    }
+    public void SaveGame(SaveData data)
+    {
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString(saveKey, json);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadGame()
+    {
+        if (PlayerPrefs.HasKey(saveKey))
+        {
+            string json = PlayerPrefs.GetString(saveKey);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            score = data.score;
+            matches = data.matches;
+            turns = data.turns;
+            DisplayTexts();
+
+            PlayerPrefs.SetInt("rows", data.rows);
+            PlayerPrefs.SetInt("cardcount",data.cardCount);
+
+        }
+        else
+        {
+            Debug.LogWarning("No save data found!");
+        }
+    }
+
+    void DisplayTexts()
+    {
+        scoreText.text = score.ToString();
+        matchesText.text = matches.ToString();
+        turnsText.text = turns.ToString();
     }
 }

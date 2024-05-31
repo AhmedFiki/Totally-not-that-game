@@ -5,15 +5,17 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    [SerializeField] int id = 0;
+    [SerializeField] int id = 0; //#
     [SerializeField] Image image;
     [SerializeField] public GameObject visuals;
-    [SerializeField] Sprite itemImage;
+    [SerializeField] public Sprite itemImage; //#
     [SerializeField] Sprite backImage;
 
     [SerializeField] bool isFlipped = false;
     [SerializeField] bool flipping = false;
-    [SerializeField] float flipDuration = 1;
+    [SerializeField] bool hidden = false; //#
+
+    [SerializeField] float flipDuration = .5f;
 
 
     //card flip ease in
@@ -21,6 +23,11 @@ public class Card : MonoBehaviour
     //card flip ease out
     public AnimationCurve scaleUpCurve;
 
+    private void Start()
+    {
+        if(hidden)
+            HideCard();
+    }
 
     [ContextMenu("Flip Card")]
     public void FlipCard()
@@ -66,6 +73,7 @@ public class Card : MonoBehaviour
     public void HideCard()
     {
         visuals.SetActive(false);
+        hidden=true;
     }
     public void FlipImage()
     {
@@ -107,6 +115,14 @@ public class Card : MonoBehaviour
     public void SetID(int id)
     {
         this.id = id;
+    }
+    public bool IsHidden()
+    {
+        return hidden;
+    }
+    public void SetHidden(bool h)
+    {
+        hidden = h; 
     }
     public void SetItemSprite(Sprite sprite)
     {

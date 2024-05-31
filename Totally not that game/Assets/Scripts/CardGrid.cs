@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +15,9 @@ public class CardGrid : MonoBehaviour
     [SerializeField] List<Sprite> sprites = new List<Sprite>();
 
 
-
     private void Start()
     {
+
         rows = PlayerPrefs.GetInt("rows", 3);
         AdjustCellSize();
         InstantiateGridCards(PlayerPrefs.GetInt("cardcount", 12));
@@ -35,8 +37,14 @@ public class CardGrid : MonoBehaviour
         {
             InstantiateGridCard();
         }
-        AssignGridCards();
-
+        if(PlayerPrefs.HasKey("SaveData") )
+        {
+            LoadGridCards();
+        }
+        else
+        {
+            AssignGridCards();
+        }
     }
 
     void ShuffleSpriteList()
@@ -45,7 +53,7 @@ public class CardGrid : MonoBehaviour
 
         for (int i = n - 1; i > 0; i--)
         {
-            int j = Random.Range(0, i + 1);
+            int j = UnityEngine.Random.Range(0, i + 1);
             Sprite temp = sprites[i];
             sprites[i] = sprites[j];
             sprites[j] = temp;
@@ -78,6 +86,18 @@ public class CardGrid : MonoBehaviour
         }
         ShuffleGridChildren();
     }
+    public void LoadGridCards()
+    {
+        string json = PlayerPrefs.GetString("SaveData");
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+        for (int i = 0; i < cards.Count; i ++)
+        {
+            cards[i].GetComponent<Card>().SetItemSprite(GetSpriteFromID( GetSpriteID(data.cardsData[i].spriteName)));
+            cards[i].GetComponent<Card>().SetID(data.cardsData[i].id);
+            cards[i].GetComponent<Card>().SetHidden(data.cardsData[i].hidden);
+        }
+
+        }
     void ShuffleGridChildren()
     {
         List<Transform> children = new List<Transform>();
@@ -85,12 +105,13 @@ public class CardGrid : MonoBehaviour
         {
             children.Add(child);
         }
-
         ShuffleCardList(children);
 
         for (int i = 0; i < children.Count; i++)
         {
             children[i].SetSiblingIndex(i);
+            GameManager.Instance.unshuffledCards.Add(children[i].gameObject);
+
         }
     }
 
@@ -99,7 +120,7 @@ public class CardGrid : MonoBehaviour
         int n = list.Count;
         for (int i = n - 1; i > 0; i--)
         {
-            int j = Random.Range(0, i + 1);
+            int j = UnityEngine.Random.Range(0, i + 1);
             Transform temp = list[i];
             list[i] = list[j];
             list[j] = temp;
@@ -115,5 +136,26 @@ public class CardGrid : MonoBehaviour
     public void SetRows(int r)
     {
         rows = r;
+    }
+
+    public int GetSpriteID(string s)
+    {
+        Match match = Regex.Match(s, @"^\d+");
+        if (match.Success)
+        {
+            return int.Parse(match.Value);
+        }
+        return -1;
+    }
+    public Sprite GetSpriteFromID(int id)
+    {
+        foreach(Sprite sprite in sprites)
+        {
+            if (GetSpriteID(sprite.name) == id)
+            {
+                return sprite;
+            }
+        }
+        return null;
     }
 }

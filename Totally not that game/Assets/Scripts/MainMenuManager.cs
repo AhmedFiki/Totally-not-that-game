@@ -14,7 +14,14 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-
+        if (PlayerPrefs.HasKey("SaveData"))
+        {
+            continueButton.interactable = true;
+        }
+        else
+        {
+            continueButton.interactable= false;
+        }
     }
 
     public void PlayDifficulty(int difficulty)
@@ -51,7 +58,6 @@ public class MainMenuManager : MonoBehaviour
                 StartGame();
                 break;
 
-
         }
 
     }
@@ -59,11 +65,10 @@ public class MainMenuManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("rows", rows);
         PlayerPrefs.SetInt("cardcount", rows * columns);
-        SceneManager.LoadScene(1);
 
-    }
-    public void StartCustom()
-    {
+        PlayerPrefs.DeleteKey("SaveData");
+
+        SceneManager.LoadScene(1);
 
     }
 
@@ -74,7 +79,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadGame()
     {
-
+        SceneManager.LoadScene(1);
     }
 
     public void SetRows(int rows)
