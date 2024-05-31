@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
@@ -58,6 +59,7 @@ public class MainMenuManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("rows", rows);
         PlayerPrefs.SetInt("cardcount", rows * columns);
+        SceneManager.LoadScene(1);
 
     }
     public void StartCustom()

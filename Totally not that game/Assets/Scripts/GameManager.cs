@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,16 +29,27 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] int scorePerMatch = 100;
 
-    //layout size
-    [SerializeField] private Vector2Int gridSize;
+    public AudioSource audioSource;
+    public AudioClip winClip;
+    public AudioClip rightClip;
+    public AudioClip wrongClip;
+    public AudioClip cardClip;
+
+    [SerializeField] GameObject winPanel;
+
+    int availableCards = 0;
 
     private void Awake()
     {
         Instance = this;
     }
-
+    private void Start()
+    {
+        availableCards = PlayerPrefs.GetInt("cardcount", 12);
+    }
     public void RegisterClick(Card card)
     {
+        PlayAudioClip(cardClip);
         card.FlipCard();
         if (first)
         {
@@ -58,10 +70,13 @@ public class GameManager : MonoBehaviour
         {//add score, remove gameobjects
             AddScore(scorePerMatch);
             AddMatch();
+            PlayAudioClip(rightClip);
             StartCoroutine(ReFlipTimer(firstCard, secondCard, true));
         }
         else
         {//flip again
+            PlayAudioClip(wrongClip);
+
             StartCoroutine(ReFlipTimer(firstCard, secondCard, false));
         }
 
@@ -82,6 +97,11 @@ public class GameManager : MonoBehaviour
         {
             first.HideCard();
             second.HideCard();
+            availableCards -= 2;
+        }
+        if (availableCards <= 0)
+        {
+            Win();
         }
     }
 
@@ -103,7 +123,8 @@ public class GameManager : MonoBehaviour
 
     public void Win()
     {
-
+        PlayAudioClip(winClip);
+        winPanel.SetActive(true);
     }
 
     public void RestartGame()
@@ -111,9 +132,28 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void SetGridSize(Vector2Int gridSize)
+    public void PlayAudioClip(AudioClip clip)
     {
-        this.gridSize = gridSize;
-    }
+        if (clip == null)
+        {
+            Debug.LogWarning("No AudioClip!");
+            return;
+        }
 
+        audioSource.PlayOneShot(clip);
+    }
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene(1);
+
+    }
+    public void SaveQuit()
+    {
+
+    }
 }
