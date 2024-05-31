@@ -36,11 +36,6 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    public void CreateCardGrid()
-    {
-
-    }
-
     public void RegisterClick(Card card)
     {
         card.FlipCard();

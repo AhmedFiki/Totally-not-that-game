@@ -567,7 +567,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 163, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -1007.785, y: -269.0629}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &798585204
@@ -587,13 +587,13 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 3
   m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 59.91424, y: 59.91424}
+  m_StartAxis: 1
+  m_CellSize: {x: 120.09014, y: 120.09014}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
-  m_ConstraintCount: 3
+  m_ConstraintCount: 5
 --- !u!114 &798585205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -607,7 +607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridLayoutGroup: {fileID: 798585204}
-  columns: 3
+  rows: 3
   cardPrefab: {fileID: 3415795443557819050, guid: 53233b08d8dd24847b5788d2dc8ce354, type: 3}
   cards: []
   sprites:

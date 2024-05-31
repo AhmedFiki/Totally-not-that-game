@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CardGrid : MonoBehaviour
 {
     [SerializeField] private GridLayoutGroup gridLayoutGroup;
-    [SerializeField] private int columns = 3;
+    [SerializeField] private int rows = 3;
     [SerializeField] GameObject cardPrefab;
 
     [SerializeField] List<GameObject> cards = new List<GameObject>();
@@ -16,20 +16,17 @@ public class CardGrid : MonoBehaviour
 
     private void Start()
     {
-        columns = PlayerPrefs.GetInt("columns", 3);
+        rows = PlayerPrefs.GetInt("rows", 3);
         AdjustCellSize();
-        InstantiateGridCards(PlayerPrefs.GetInt("cardcount", 6));
+        InstantiateGridCards(PlayerPrefs.GetInt("cardcount", 12));
 
     }
     private void AdjustCellSize()
     {
         RectTransform containerRectTransform = gridLayoutGroup.GetComponent<RectTransform>();
-        float cellWidth = (containerRectTransform.rect.width - (gridLayoutGroup.padding.left + gridLayoutGroup.padding.right) - ((columns - 1) * gridLayoutGroup.spacing.x)) / columns;
-        float cellHeight = (containerRectTransform.rect.height - (gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom) - ((columns - 1) * gridLayoutGroup.spacing.y)) / columns;
-        float avg = (cellWidth + cellHeight) /2;
-        Debug
-            .Log(cellWidth+" "+cellHeight+" "+avg);
-        gridLayoutGroup.cellSize = new Vector2(avg, avg);
+        float cellWidth = (containerRectTransform.rect.height - (gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom) - ((rows - 1) * gridLayoutGroup.spacing.x)) / rows;
+
+        gridLayoutGroup.cellSize = new Vector2(cellWidth, cellWidth);
     }
 
     public void InstantiateGridCards(int amount)
@@ -115,8 +112,8 @@ public class CardGrid : MonoBehaviour
             AdjustCellSize();
         }
     }
-    public void SetColumns(int c)
+    public void SetRows(int r)
     {
-        columns = c;
+        rows = r;
     }
 }
