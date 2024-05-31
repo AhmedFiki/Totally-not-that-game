@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    private int id = 0;
+    [SerializeField] int id = 0;
     [SerializeField] Image image;
     [SerializeField] Sprite itemImage;
     [SerializeField] Sprite backImage;
@@ -64,6 +64,7 @@ public class Card : MonoBehaviour
 
     public void HideCard()
     {
+        Debug.Log("Card hidden");
 
     }
     public void FlipImage()
@@ -78,6 +79,21 @@ public class Card : MonoBehaviour
         }
         isFlipped = !isFlipped;
     }
+
+    public void OnClick()
+    {
+        GameManager.Instance.RegisterClick(this);
+    }
+
+    public void OnHover()
+    {
+        image.color = Color.gray;
+    }
+    public void UnHover()
+    {
+        image.color= Color.white;
+    }
+
     public void ChangeImage(Sprite sprite)
     {
         image.sprite = sprite;

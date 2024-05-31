@@ -9,11 +9,15 @@ public class CardGrid : MonoBehaviour
     [SerializeField] private int columns = 3;
     [SerializeField] GameObject cardPrefab;
 
-    List<GameObject> cards = new List<GameObject>();
-    List<Sprite> sprites = new List<Sprite>();
+    [SerializeField] List<GameObject> cards = new List<GameObject>();
+    [SerializeField] List<Sprite> sprites = new List<Sprite>();
+
+    
+
     private void Start()
     {
         AdjustCellSize();
+        TestInstantiateGrid();
     }
     private void AdjustCellSize()
     {
@@ -28,7 +32,7 @@ public class CardGrid : MonoBehaviour
         {
             InstantiateGridCard();
         }
-
+        AssignGridCards();  
 
     }
 
@@ -44,6 +48,12 @@ public class CardGrid : MonoBehaviour
             sprites[j] = temp;
         }
     }
+    [ContextMenu("Test Grid")]
+    public void TestInstantiateGrid()
+    {
+        InstantiateGridCards(10);
+    }
+
         [ContextMenu("Instantiate card")]
     public void InstantiateGridCard()
     {
@@ -58,13 +68,40 @@ public class CardGrid : MonoBehaviour
         for (int i = 0; i < cards.Count; i += 2)
         {
             cards[i].GetComponent<Card>().SetItemSprite(sprites[index]);
-            cards[i].GetComponent<Card>().SetID(index++);
+            cards[i].GetComponent<Card>().SetID(index);
             
             cards[i + 1].GetComponent<Card>().SetItemSprite(sprites[index]);
             cards[i+1].GetComponent<Card>().SetID(index++);
         }
+        ShuffleGridChildren();
+    }
+    void ShuffleGridChildren()
+    {
+        List<Transform> children = new List<Transform>();
+        foreach (Transform child in gridLayoutGroup.transform)
+        {
+            children.Add(child);
+        }
+
+        ShuffleCardList(children);
+
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].SetSiblingIndex(i);
+        }
     }
 
+    void ShuffleCardList(List<Transform> list)
+    {
+        int n = list.Count;
+        for (int i = n - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            Transform temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+    }
     private void OnValidate()
     {
         if (gridLayoutGroup != null)
